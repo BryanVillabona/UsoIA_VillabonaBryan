@@ -24,3 +24,34 @@ function mostrarEnPantalla(listaPersonajes) {
     });
 }
 
+//funcion para obtener los datos
+async function obtenerPersonajes(nombre = '') {
+    try {
+        let urlFinal = urlBase;
+        if (nombre !== '') {
+            urlFinal += `/?name=${nombre}`;
+        }
+
+        const respuesta = await fetch(urlFinal);
+        
+        const datos = await respuesta.json();
+
+        if (datos.error) {
+            contenedorTarjetas.innerHTML = '<p>No se encontró ese personaje</p>';
+            return;
+        }
+
+        mostrarEnPantalla(datos.results);
+
+    } catch (error) {
+        console.error('Hubo un error:', error);
+    }
+}
+
+//evento click para el boton
+botonAccion.addEventListener('click', () => {
+    const nombreBusqueda = inputUsuario.value;
+    obtenerPersonajes(nombreBusqueda);
+});
+
+obtenerPersonajes();
